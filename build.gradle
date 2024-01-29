@@ -1,0 +1,46 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.0-SNAPSHOT'
+	id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'ai.enginex'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'  
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation "us.fatehi:schemacrawler:16.21.1"
+	implementation "us.fatehi:schemacrawler-sqlite:16.21.1"
+	implementation "us.fatehi:schemacrawler-postgresql:16.21.1"
+	implementation "us.fatehi:schemacrawler-text:16.21.1"
+	implementation "us.fatehi:schemacrawler-scripting:16.21.1"
+	implementation "us.fatehi:schemacrawler-diagram:16.21.1"
+	implementation "com.fasterxml.jackson.core:jackson-core:2.15.3"
+	implementation "com.fasterxml.jackson.core:jackson-databind:2.15.3"
+	implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.3"
+	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.3"
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
