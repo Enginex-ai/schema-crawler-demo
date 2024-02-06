@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Database Schema Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <svg id="database-schema" width="800" height="600"></svg>
+
+    <script>
+        // Fetch the JSON data from the API endpoint
+        fetch('/api/database-schema/tables')  // Replace with your actual API endpoint
+            .then(response => response.json())
+            .then(data => visualizeDatabaseSchema(data))
+            .catch(error => console.error('Error fetching data:', error));
+
+        function visualizeDatabaseSchema(data) {
+            const svg = d3.select("#database-schema");
+
+            // ... (Same D3.js code as before)
+
+            // You can use the 'data' variable to access the fetched JSON data
+            console.log(data);
+        }
+    </script>
+</body>
+</html>

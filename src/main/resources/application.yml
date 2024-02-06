@@ -1,0 +1,22 @@
+server:
+  port: 9000
+app:
+  elastic:
+    hosts: localhost:9200
+    username: elastic
+    password: A-BSAKMUl5baWRQvZZs1
+
+constants:
+  column-key: all-table-columns
+  table-index: enginex-table-index
+  systable-index: enginex-system-table-index
+  #scheduler-cron: 0 0 */2 * * *
+  scheduler-cron: 0 */1 * * * *
+  
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://exdev:40YZZIG79mLciuww@excluster.k2tucgu.mongodb.net/?retryWrites=true&w=majority
+      database: ex-models
+      field-naming-strategy: org.springframework.data.mapping.model.SnakeCaseFieldNamingStrategy
+      

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ER Diagram with d3-erd</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://raw.githubusercontent.com/christabor/d3-erd/master/dist/d3-erd.min.js"></script>
+</head>
+<body>
+    <!-- Your ER Diagram will be rendered here -->
+    <div id="erd-container"></div>
+
+    <!-- Your JavaScript code to generate the ER Diagram -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Data for the ER Diagram
+        var data = {
+            entities: [
+                { id: 'User', label: 'User' },
+                { id: 'Order', label: 'Order' }
+            ],
+            relationships: [
+                { start: 'User', end: 'Order', type: '1:N' }
+            ]
+        };
+
+        // Configure and render the ER Diagram
+        d3.erd()
+            .width(800)
+            .height(400)
+            .draw(data, '#erd-container');
+    });
+</script>
+
+</body>
+</html>

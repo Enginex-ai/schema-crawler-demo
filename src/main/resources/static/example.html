@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON to d3.js</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+  <svg width="800" height="600"></svg>
+
+  <script>
+    // Sample JSON data
+    var data = {
+      "tables": [
+        {
+          "name": "public.accounts",
+          "columns": ["Column1", "Column2"]
+        },
+        {
+          "name": "Table2",
+          "columns": ["Column1", "Column3"]
+        }
+      ],
+      "relationships": [
+        {
+          "source": "public.accounts",
+          "target": "Table2",
+          "type": "one-to-many"
+        }
+      ]
+    };
+
+    // Create the svg container
+    var svg = d3.select("svg"),
+        width = +svg.attr("width"),
+        height = +svg.attr("height");
+
+    // Create the simulation
+    var simulation = d3.forceSimulation()
+        .force("link", d3.forceLink().id(function(d) { return d.id; }))
+        .force("charge", d3.forceManyBody())
+        .force("center", d3.forceCenter(width / 2, height / 2));
+
+    // Extract nodes and links
+    var nodes = data.tables.map(table => ({ id: table.name, type: 'table' }))
+    var columns = data.tables.flatMap(table => table.columns.map(column => ({ id: column, type: 'column' })))
+    nodes = nodes.concat(columns)
+
+    var links = data.relationships.map(rel => ({ source: rel.source, target: rel.target, type: rel.type }));
+
+    // Draw links
+    var link = svg.append("g")
+        .selectAll("line")
+        .data(links)
+        .enter().append("line")
+        .attr("stroke", "black");
+
+    // Draw nodes
+    var node = svg.append("g")
+        .selectAll("circle")
+        .data(nodes)
+        .enter().append("circle")
+        .attr("r", 5)
+        .attr("fill", d => d.type === 'table' ? 'blue' : 'red')
+        .call(drag(simulation));
+
+    // Add labels to nodes
+    node.append("title")
+        .text(function(d) { return d.id; });
+
+    // Add labels to links
+    var linkText = svg.append("g").selectAll(".linkLabel")
+        .data(links)
+        .enter()
+        .append("text")
+        .attr("class", "linkLabel")
+        .attr("dx", "50")
+        .attr("dy", "-5")
+        .text(function(d) { return d.type; });
+
+    // Add forces to the simulation
+    simulation
+        .nodes(nodes)
+        .on("tick", ticked);
+
+    simulation.force("link")
+        .links(links);
+
+    // Update node and link positions
+    function ticked() {
+      link
+          .attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
+
+      node
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; });
+
+      linkText
+          .attr("x", function(d) { return (d.source.x + d.target.x) / 2; })
+          .attr("y", function(d) { return (d.source.y + d.target.y) / 2; });
+    }
+
+    // Drag behavior
+    function drag(simulation) {
+
+      function dragstarted(event, d) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      }
+
+      function dragged(event, d) {
+        d.fx = event.x;
+        d.fy = event.y;
+      }
+
+      function dragended(event, d) {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+      }
+
+      return d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended);
+    }
+
+  </script>
+</body>
+</html>
